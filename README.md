@@ -1,4 +1,5 @@
 ## Web-Translator
+
 [English](README.md) | [中文](README_zh.md)
 
 A Firefox extension for translating web pages.
@@ -16,7 +17,7 @@ A Firefox extension for translating web pages.
 3. Click on `This Firefox` and then click on `Load Temporary Add-on`.
 4. Select the `Web-Translator.xpi` file.
 
-**Note:** This is a temporary extension and only for Firefox (I am too lazy to get it certified by Mozilla).
+**Note:** This is a temporary extension and only for Firefox (I am too lazy to get it certified by Mozilla since it's only used by me).
 
 ### Usage
 

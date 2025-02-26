@@ -10,10 +10,37 @@ let targetLanguage = "chinese"; // Default target language
 let isTranslating = false;
 let translationBox = null;
 let selectionInProgress = false; // Add tracking variable for selection state
+let interfaceLanguage = "zh"; // Default to Chinese
+
+// UI text translation table
+const uiTexts = {
+  en: {
+    translatingTo: "Translating to",
+    translating: "Translating...",
+    copyButton: "Copy",
+    copied: "Copied",
+    translationError: "Translation error:",
+    translationFailed: "Translation failed",
+    requestFailed: "Translation request failed:",
+    configureApiKey: "Please configure an API key in settings",
+    selectAI: "Please select an AI model in settings",
+  },
+  zh: {
+    translatingTo: "正在翻译成",
+    translating: "正在翻译...",
+    copyButton: "复制",
+    copied: "已复制",
+    translationError: "翻译错误：",
+    translationFailed: "翻译失败",
+    requestFailed: "翻译请求失败：",
+    configureApiKey: "请在设置中配置 API 密钥",
+    selectAI: "请在设置中选择 AI 模型",
+  },
+};
 
 // Initialisation - Get configuration
 browser.storage.local
-  .get(["delaySeconds", "maxWidth", "targetLanguage"])
+  .get(["delaySeconds", "maxWidth", "targetLanguage", "interfaceLanguage"])
   .then((result) => {
     if (result.delaySeconds !== undefined) {
       delaySeconds = result.delaySeconds;
@@ -26,6 +53,10 @@ browser.storage.local
     if (result.targetLanguage) {
       targetLanguage = result.targetLanguage;
       console.log("Target language setting loaded:", targetLanguage);
+    }
+    if (result.interfaceLanguage) {
+      interfaceLanguage = result.interfaceLanguage;
+      console.log("Interface language setting loaded:", interfaceLanguage);
     }
   });
 
@@ -43,6 +74,10 @@ browser.storage.onChanged.addListener((changes, area) => {
     if (changes.targetLanguage) {
       targetLanguage = changes.targetLanguage.newValue;
       console.log("Target language setting updated:", targetLanguage);
+    }
+    if (changes.interfaceLanguage) {
+      interfaceLanguage = changes.interfaceLanguage.newValue;
+      console.log("Interface language setting updated:", interfaceLanguage);
     }
   }
 });
@@ -209,14 +244,17 @@ function translateSelectedText() {
 
   // Get target language display name
   const languageNames = {
-    chinese: "Chinese",
-    japanese: "Japanese",
-    "british-english": "British English",
+    chinese: interfaceLanguage === "zh" ? "中文" : "Chinese",
+    japanese: interfaceLanguage === "zh" ? "日语" : "Japanese",
+    "british-english": interfaceLanguage === "zh" ? "英语" : "English",
   };
-  const displayLanguage = languageNames[targetLanguage] || "Chinese";
+  const displayLanguage =
+    languageNames[targetLanguage] ||
+    (interfaceLanguage === "zh" ? "中文" : "Chinese");
 
   // Show loading prompt, including target language information
-  showTranslationBox(`Translating to ${displayLanguage}...`, true);
+  const loadingText = `${uiTexts[interfaceLanguage].translatingTo} ${displayLanguage}...`;
+  showTranslationBox(loadingText, true);
 
   // Request background script to translate
   browser.runtime
@@ -230,12 +268,18 @@ function translateSelectedText() {
       if (response.success) {
         showTranslationBox(response.translation, false);
       } else {
-        showTranslationBox(response.error || "Translation failed", false);
+        showTranslationBox(
+          response.error || uiTexts[interfaceLanguage].translationFailed,
+          false
+        );
       }
     })
     .catch((error) => {
       console.error("Translation request error:", error);
-      showTranslationBox("Translation request failed: " + error.message, false);
+      showTranslationBox(
+        uiTexts[interfaceLanguage].requestFailed + " " + error.message,
+        false
+      );
     })
     .finally(() => {
       isTranslating = false;
@@ -321,7 +365,7 @@ function showTranslationBox(translation, isLoading = false) {
 
     // Add copy button to header bar
     const copyButton = document.createElement("button");
-    copyButton.innerHTML = "Copy";
+    copyButton.innerHTML = uiTexts[interfaceLanguage].copyButton;
     copyButton.className = "ai-translator-copy-button";
     headerDiv.appendChild(copyButton);
 
@@ -370,7 +414,7 @@ function showTranslationBox(translation, isLoading = false) {
         if (successful) {
           // Indicate copy success
           const originalText = copyButton.innerText;
-          copyButton.innerText = "Copied";
+          copyButton.innerText = uiTexts[interfaceLanguage].copied;
           copyButton.classList.add("copied");
 
           setTimeout(() => {

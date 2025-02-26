@@ -159,10 +159,23 @@ function getTargetLanguageDescription(langCode) {
   const languages = {
     chinese: "Chinese",
     japanese: "Japanese",
-    "british-english": "British English",
+    "british-english": "English",
   };
   return languages[langCode] || "Chinese";
 }
+
+// Add UI text localisation support
+const uiTexts = {
+  en: {
+    pleaseConfigureApi:
+      "Please configure an API key and select an AI model in the extension settings first.",
+    translationError: "Translation error: ",
+  },
+  zh: {
+    pleaseConfigureApi: "请先在扩展设置中输入 API 密钥并选择 AI 模型。",
+    translationError: "翻译错误: ",
+  },
+};
 
 // Translate text function
 async function translateText(
@@ -176,20 +189,24 @@ async function translateText(
   console.log("Requested target language:", requestTargetLang);
 
   try {
-    // Get stored API key, AI model and target language
-    const { apiKey, selectedAI, targetLanguage } =
+    // Get stored API key, AI model, target language and interface language
+    const { apiKey, selectedAI, targetLanguage, interfaceLanguage } =
       await browser.storage.local.get([
         "apiKey",
         "selectedAI",
         "targetLanguage",
+        "interfaceLanguage",
       ]);
 
+    // Default to Chinese interface
+    const uiLang = interfaceLanguage || "zh";
+
     if (!apiKey) {
-      return "Please configure an API key in settings";
+      return uiTexts[uiLang].pleaseConfigureApi;
     }
 
     if (!selectedAI) {
-      return "Please select an AI model in settings";
+      return uiTexts[uiLang].pleaseConfigureApi;
     }
 
     // Prioritise target language from request, then stored setting, then default to Chinese
@@ -279,7 +296,10 @@ async function translateText(
     return translatedText;
   } catch (error) {
     console.error("Error during translation:", error);
-    return `Translation error: ${error.message}`;
+    const interfaceLanguage = await browser.storage.local
+      .get("interfaceLanguage")
+      .then((result) => result.interfaceLanguage || "zh");
+    return `${uiTexts[interfaceLanguage].translationError}${error.message}`;
   }
 }
 

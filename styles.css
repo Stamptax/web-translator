@@ -10,7 +10,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
+  overflow: auto;
   border: none;
 }
 
@@ -314,4 +314,34 @@
 .ai-translation-box .close-button:hover {
   background-color: #f5f5f5;
   color: #666666;
+}
+
+/* Language selector styles */
+.language-selector {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.language-icon {
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+/* Language selector label styles */
+.language-selector .translator-label {
+  margin-bottom: 0;
+  margin-right: 8px;
+  display: flex;
+  align-items: center;
+}
+
+/* Language selector dropdown styles */
+.language-selector .translator-select-wrapper {
+  flex: 1;
 }

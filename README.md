@@ -4,6 +4,15 @@
 
 A Firefox extension for translating web pages.
 
+### Preview
+
+![Screenshot 2025-03-04 at 18 30 59](https://github.com/user-attachments/assets/eabc3813-27cf-4643-9563-915d5095abc2)
+![Screenshot 2025-03-04 at 18 30 37](https://github.com/user-attachments/assets/a53295df-60be-4bb1-a40c-fcb41eaa0bdc)
+![Screenshot 2025-03-04 at 18 30 11](https://github.com/user-attachments/assets/034907bb-bbff-4e9c-99c2-f9be52a4f7d2)
+![Screenshot 2025-03-04 at 18 32 34](https://github.com/user-attachments/assets/cbdb0c15-1ead-4044-bbd5-2eb9957c287c)
+
+
+
 ### Features
 
 - Translate selected text on web pages to Chinese, Japanese or English.

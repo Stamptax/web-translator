@@ -26,6 +26,10 @@ A Firefox extension for translating web pages.
 3. Click on `This Firefox` and then click on `Load Temporary Add-on`.
 4. Select the `Web-Translator.xpi` file.
 
+#### Install via Tampermonkey
+
+1. Click [here](web-translator-script.js) to view the script.
+
 **Note:** This is a temporary extension and only for Firefox (I am too lazy to get it certified by Mozilla since it's only used by me).
 
 ### Usage
